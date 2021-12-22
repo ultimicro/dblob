@@ -10,6 +10,8 @@
 /depcomp
 /install-sh
 /missing
+/src/config.h*
 /src/dblobd
 Makefile
 Makefile.in
+stamp-h1
