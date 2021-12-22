@@ -1,1 +1,15 @@
-/target
+*.o
+.deps/
+/aclocal.m4
+/autom4te.cache/
+/compile
+/config.log
+/config.status
+/configure
+/configure~
+/depcomp
+/install-sh
+/missing
+/src/dblobd
+Makefile
+Makefile.in
