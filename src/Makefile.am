@@ -1,5 +1,6 @@
 bin_PROGRAMS = dblobd
 
-dblobd_CFLAGS = $(AM_CFLAGS) -Wall -Werror
+dblobd_CFLAGS = -Wall -Werror $(AM_CFLAGS) $(PTHREAD_CFLAGS)
+dblobd_LDADD = $(PTHREAD_LIBS)
 dblobd_SOURCES = \
 	main.c
