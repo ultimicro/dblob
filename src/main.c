@@ -116,10 +116,14 @@ static bool run_event_loops(int epoll, int shutdown, uint64_t count)
 	ctx.failed = false;
 
 	for (uint64_t i = 0; i < count; i++) {
-		int res = pthread_create(&loops[i], NULL, event_loop, &ctx);
+		int res;
+
+		printf("Spawning event loop %"PRIu64"\n", i);
+
+		res = pthread_create(&loops[i], NULL, event_loop, &ctx);
 
 		if (res) {
-			fprintf(stderr, "Failed to spawn event loop %"PRIu64": %d\n", i, res);
+			fprintf(stderr, "Failed to spawn the event loop: %d\n", res);
 			count = i;
 			ctx.failed = true;
 			break;
@@ -137,9 +141,12 @@ static bool run_event_loops(int epoll, int shutdown, uint64_t count)
 		int res = pthread_join(loops[i], NULL);
 
 		if (res) {
-			fprintf(stderr, "Failed to join event loop %"PRIu64": %d\n", i, res);
+			fprintf(stderr, "Failed to join event loop %"PRIu64": %d\n",
+				i, res);
 			abort();
 		}
+
+		printf("Event loop %"PRIu64" is stopped\n", i);
 	}
 
 	// clean up
@@ -240,6 +247,8 @@ int main(int argc, char *argv[])
 {
 	int mon;
 	bool success;
+
+	printf("Starting "PACKAGE" "VERSION"\n");
 
 	if (!block_signals()) {
 		return EXIT_FAILURE;
