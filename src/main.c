@@ -1,5 +1,6 @@
 #include "config.h"
 
+#include "api.h"
 #include "dispatcher.h"
 #include "server.h"
 
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
 {
 	bool success;
 	struct server server;
+	struct api api;
 
 	// init foundation
 	printf("Starting "PACKAGE" "VERSION"\n");
@@ -127,11 +129,28 @@ int main(int argc, char *argv[])
 		goto destroy_server;
 	}
 
+	// start api
+	if (!api_init(&api, "127.0.0.1", 8080)) {
+		goto remove_server;
+	}
+
+	if (!dispatcher_add(dispatcher, (struct event_source *)&api)) {
+		goto destroy_api;
+	}
+
 	// enter event loop
 	success = dispatcher_run(dispatcher, ready, NULL);
 	shuttingdown = true; // prevent accessing on dispatcher while we clean up
 
 	// clean up
+	if (!dispatcher_del(dispatcher, (struct event_source *)&api)) {
+		abort();
+	}
+
+destroy_api:
+	api_destroy(&api);
+
+remove_server:
 	if (!dispatcher_del(dispatcher, (struct event_source *)&server)) {
 		abort();
 	}
