@@ -6,5 +6,8 @@ Distributed BLOB is a BLOB storage designed for low-latency access on multi-regi
 
 ### Prerequisites
 
-- GNU Autoconf
-- GNU Automake
+- Rust
+
+## License
+
+GNU AGPLv3
