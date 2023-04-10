@@ -81,23 +81,6 @@ static bool listen_signals(void)
 	return true;
 }
 
-static bool block_signals(void)
-{
-	sigset_t blocks;
-
-	if (sigfillset(&blocks) < 0) {
-		perror("Failed to initialize signal list to block");
-		return false;
-	}
-
-	if (sigprocmask(SIG_BLOCK, &blocks, NULL) < 0) {
-		perror("Failed to block signals");
-		return false;
-	}
-
-	return true;
-}
-
 int main(int argc, char *argv[])
 {
 	bool success;
@@ -105,9 +88,7 @@ int main(int argc, char *argv[])
 	struct api api;
 
 	// init foundation
-	printf("Starting "PACKAGE" "VERSION"\n");
-
-	if (!block_signals() || !listen_signals()) {
+	if (!listen_signals()) {
 		return EXIT_FAILURE;
 	}
 
